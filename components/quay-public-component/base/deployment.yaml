@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: quay-public-component
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: quay-public-component
+    app.kubernetes.io/part-of: e2e-quayio
+  name: quay-public-component
+  namespace: appstudio-e2e-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: quay-public-component
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: quay-public-component
+    spec:
+      containers:
+      - image: quay.io/redhat-appstudio-qe/test-images:b545caa0de0c4e3ba3a5ad1ad7a1f1b6
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        name: container-image
+        ports:
+        - containerPort: 8081
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8081
+        resources: {}
+status: {}
